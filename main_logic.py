@@ -9,22 +9,34 @@ load_dotenv()
 
 GOOGLE_FOLDER_ID = os.getenv("GOOGLE_FOLDER_ID")
 GOOGLE_CREDENTIALS_FILE = os.getenv("GOOGLE_CREDENTIALS_FILE")
+GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
+
 AZURE_CONNECTION_STRING = os.getenv("AZURE_CONNECTION_STRING")
 AZURE_CONTAINER = os.getenv("AZURE_CONTAINER")
 
+
 # ------ GOOGLE AUTH ------
-import json
-
-GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
-
 def google_drive_auth():
-    info = json.loads(GOOGLE_CREDENTIALS_JSON)
-    creds = service_account.Credentials.from_service_account_info(
-        info,
-        scopes=["https://www.googleapis.com/auth/drive"]
-    )
-    return build("drive", "v3", credentials=creds)
+    """
+    Se GOOGLE_CREDENTIALS_JSON existir → Render
+    Caso contrário → Usa GOOGLE_CREDENTIALS_FILE localmente.
+    """
 
+    if GOOGLE_CREDENTIALS_JSON:
+        # Produção (Render)
+        info = json.loads(GOOGLE_CREDENTIALS_JSON)
+        creds = service_account.Credentials.from_service_account_info(
+            info,
+            scopes=["https://www.googleapis.com/auth/drive"]
+        )
+    else:
+        # Desenvolvimento local (arquivo físico)
+        creds = service_account.Credentials.from_service_account_file(
+            GOOGLE_CREDENTIALS_FILE,
+            scopes=["https://www.googleapis.com/auth/drive"]
+        )
+
+    return build("drive", "v3", credentials=creds)
 
 
 # ------ LISTAR DRIVE ------
@@ -75,6 +87,6 @@ def migrar_arquivos():
             container.upload_blob(nome, f, overwrite=True)
 
         os.remove(nome)
-        logs.append(f"Concluído: {nome}")
+        logs.append(f"✔ Concluído: {nome}")
 
     return logs
