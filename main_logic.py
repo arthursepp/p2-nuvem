@@ -1,3 +1,4 @@
+import json
 import os
 from dotenv import load_dotenv
 from google.oauth2 import service_account
@@ -12,12 +13,18 @@ AZURE_CONNECTION_STRING = os.getenv("AZURE_CONNECTION_STRING")
 AZURE_CONTAINER = os.getenv("AZURE_CONTAINER")
 
 # ------ GOOGLE AUTH ------
+import json
+
+GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
+
 def google_drive_auth():
-    creds = service_account.Credentials.from_service_account_file(
-        GOOGLE_CREDENTIALS_FILE,
+    info = json.loads(GOOGLE_CREDENTIALS_JSON)
+    creds = service_account.Credentials.from_service_account_info(
+        info,
         scopes=["https://www.googleapis.com/auth/drive"]
     )
     return build("drive", "v3", credentials=creds)
+
 
 
 # ------ LISTAR DRIVE ------
@@ -68,6 +75,6 @@ def migrar_arquivos():
             container.upload_blob(nome, f, overwrite=True)
 
         os.remove(nome)
-        logs.append(f"✔ Concluído: {nome}")
+        logs.append(f"Concluído: {nome}")
 
     return logs
