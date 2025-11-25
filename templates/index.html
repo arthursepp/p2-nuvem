@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Migrador Drive → Azure</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Transferência de Arquivos – Google Drive para Azure Blob</h1>
+    </header>
+
+    <div class="container">
+
+        <h2>Arquivos no Drive</h2>
+        {% if drive %}
+        <table>
+            {% for file in drive %}
+            <tr>
+                <td><img src="/static/drive.png" class="icon">{{ file.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>Nenhum arquivo na base do Drive</p>
+        {% endif %}
+
+        <h2>Arquivos na Azure</h2>
+        {% if blob %}
+        <table>
+            {% for file in blob %}
+            <tr>
+                <td><img src="/static/azure.png" class="icon">{{ file }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>Nenhum arquivo na base da Azure</p>
+        {% endif %}
+
+        <form action="/migrar">
+            <button type="submit">Migrar Arquivos</button>
+        </form>
+
+    </div>
+
+</body>
+
+</html>

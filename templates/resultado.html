@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Resultado da Migração</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Migrando</h1>
+    </header>
+
+    <div class="container">
+
+        <h2>Progresso</h2>
+
+        <div class="progress-wrapper">
+            <div id="bar" class="progress-bar">0%</div>
+        </div>
+
+        <h2>Logs</h2>
+
+        <pre id="logs">
+
+        {% for linha in logs %}
+            {{ linha }}
+        {% endfor %}
+
+    </pre>
+
+        <form action="/migrar">
+            <button type="submit">Enviar Novamente</button>
+        </form>
+
+        <form action="/">
+            <button type="submit">Voltar ao Início</button>
+        </form>
+
+    </div>
+
+    <script>
+        let logs = `{{ logs|length }}`;
+        let total = logs;
+        let bar = document.getElementById("bar");
+
+        let progress = 0;
+        let step = 100 / total;
+
+        function animate() {
+            if (progress < 100) {
+                progress += step;
+                bar.style.width = progress + "%";
+                bar.innerText = Math.floor(progress) + "%";
+                setTimeout(animate, 300);
+            }
+        }
+
+        animate();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Arquivos no Azure Blob</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Arquivos Atualmente na Azure</h1>
+    </header>
+
+    <div class="container">       
+
+        <table>
+            {% for file in blob %}
+            <tr>
+                <td><img src="/static/azure.png" class="icon">{{ file }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <br><br>
+
+        <a href="/">
+            <button>⬅ Voltar ao Início</button>
+        </a>
+
+    </div>
+
+</body>
+
+</html>
